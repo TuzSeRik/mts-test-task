@@ -1,6 +1,9 @@
 package dev.tuzserik.mts.test.task.controllers;
 
 import dev.tuzserik.mts.test.task.model.Coordinates;
+import dev.tuzserik.mts.test.task.model.LogEntry;
+import dev.tuzserik.mts.test.task.model.QueryType;
+import dev.tuzserik.mts.test.task.repositories.LogEntriesRepository;
 import dev.tuzserik.mts.test.task.responses.api.GeocodingResponse;
 import dev.tuzserik.mts.test.task.responses.api.WeatherResponse;
 import dev.tuzserik.mts.test.task.responses.api.openweathermap.OwmWeatherResponse;
@@ -33,6 +36,9 @@ public class WeatherInfoController {
     @Autowired @Qualifier("owmWeatherResponse")
     private WeatherResponse weatherResponseClass;
 
+    @Autowired
+    private LogEntriesRepository logEntriesRepository;
+
     @GetMapping()
     public ResponseEntity<OwmWeatherResponse> getLocationWeather(String locationName) {
         return new ResponseEntity<>(getCoordinatesObjectWeather(getLocationCoordinate(locationName)), HttpStatus.OK);
@@ -43,6 +49,12 @@ public class WeatherInfoController {
                                         .uri(coordinatesQuery, locationName).retrieve()
                                         .bodyToMono(Utils.asArray(geocodingResponseClass).getClass())
                                         .block();
+
+        logEntriesRepository.saveAndFlush(
+                new LogEntry()
+                        .setType(QueryType.GEOCODING)
+                        .setArguments(locationName)
+        );
 
         if (responses == null || responses.length == 0) {
             throw new ResourceAccessException("Coordinates request returned empty response!");
@@ -59,6 +71,12 @@ public class WeatherInfoController {
         OwmWeatherResponse response = (OwmWeatherResponse) weatherApi.get()
                                         .uri(weatherQuery, coordinates.latitude(), coordinates.longitude())
                                         .retrieve().bodyToMono(weatherResponseClass.getClass()).block();
+
+        logEntriesRepository.saveAndFlush(
+                new LogEntry()
+                        .setType(QueryType.WEATHER)
+                        .setArguments(coordinates.latitude() + ", " + coordinates.longitude())
+        );
 
         if (response == null) {
             throw new ResourceAccessException("Coordinates request returned empty response!");

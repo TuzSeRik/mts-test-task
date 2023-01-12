@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    active: openweathermap
+
   datasource:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:sqlitedb.db3

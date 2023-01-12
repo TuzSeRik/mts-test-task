@@ -1,1 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:sqlitedb.db3
+    username:
+    password:
+
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 

@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Application (OpenWeatherMap)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="openweathermap" />
+    <module name="mts-test-task" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="dev.tuzserik.mts.test.task.Application" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -1,0 +1,11 @@
+api:
+  resource: https://api.openweathermap.org
+  key: 93ab5f29fcd7f027300ec2b1a6e3e846
+  queries:
+    coordinates:
+      query: ${api.resource}/geo/1.0/direct?q={location},,&limit=${api.queries.coordinates.limit}&appid=${api.key}
+      limit: 1
+      response: owmGeocodingResponse
+    weather:
+      query: ${api.resource}/data/2.5/weather?lat={lat}&lon={lon}&appid=${api.key}
+      response: owmWeatherResponse
